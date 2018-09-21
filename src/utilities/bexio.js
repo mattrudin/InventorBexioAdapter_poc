@@ -38,7 +38,9 @@ const Bexio = () => {
 			return accessToken;
 		} 
 		const authorizeEndpoint = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
-		
+		window.location = authorizeEndpoint;
+		const code = window.location.href.match(/code=([^&]*)/);
+
 
 	},
 	getData() {
