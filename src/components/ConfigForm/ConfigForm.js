@@ -13,9 +13,7 @@ class ConfigForm extends React.Component{
 
 	render() {
 
-		const dropdownList = resources.map(item => {
-			return <option value={item}>{item}</option>
-		})
+		const dropdownList = resources.map(item => <option value={item}>{item}</option>)
 
 		return(
 			<form onSubmit={this.handleSubmit}>
