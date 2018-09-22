@@ -24,6 +24,8 @@ const state;
 
 const code;
 const accessToken;
+const accessTokenUrl = 'https://office.bexio.com/oauth/access_token';
+const clientSecret;
 
 const organisation = //company identifier
 const resource = resource;
@@ -37,11 +39,21 @@ const Bexio = () => {
 		if (accessToken) {
 			return accessToken;
 		} 
+
+		//step 1 & 2
 		const authorizeEndpoint = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
 		window.location = authorizeEndpoint;
-		const code = window.location.href.match(/code=([^&]*)/);
-
-
+		code = window.location.href.match(/code=([^&]*)/);
+		
+		//step 3 & 4
+		return fetch(accessTokenUrl, {
+			method: 'post';
+			client_id: clientID,
+			redirect_uri: redirectURI,
+			client_secret: clientSecret,
+			code: code
+		})	.then(response => return response.json())
+			.then(jsonResponse => return accessToken = jsonResponse.access_token)
 	},
 	getData() {
 		let token = Bexio.getAccessToken();
