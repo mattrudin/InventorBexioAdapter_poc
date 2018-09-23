@@ -5,7 +5,7 @@ import { fromBexio } from '../../data/fromBexio';
 
 const CardContainer = (props) => {
 
-	const cards = fromBexio.map(card => <Card/>)
+	const cards = fromBexio.map((card, index)=> <Card key={index} />)
 
 	return(
 		<div className="CardContainer">

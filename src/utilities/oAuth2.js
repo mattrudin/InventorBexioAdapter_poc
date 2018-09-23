@@ -1,31 +1,42 @@
-//4. Receive the access token
+import ClientOAuth2 from 'client-oauth2'; 
+import express from 'express';
 
-const redirectUri = 'http://localhost:3000/';
-const clientId = //clientID
-const state = //state
-
-const ClientOAuth2 = require('client-oauth2')
-const auth0-authorize = //string
-const encodedString = btoa(auth0-authorize);
-//use the string as state parameter
-const decodedString = atoa(encodedString);
-
-//https://docs.bexio.com/oauth/oauth/
+//Configuration
 const bexioAuth = new ClientOAuth2({
-  clientId: clientId,
-  redirectUri: redirectUri,
-  state: encodedString
+  clientId: 'abc',
+  clientSecret: '123',
+  accessTokenUri: 'https://office.bexio.com/oauth/access_token',
+  authorizationUri: 'https://office.bexio.com/oauth/authorize',
+  redirectUri: 'http://localhost:3000/', //oder requestb.in
+  state: 'abc123'
 })
 
-//1. Request access to the bexio account
-const getAuthenticationUrl = (clientID, redirectUri, state) => {
-	const authEndpoint = 'https://office.bexio.com/oauth/authorize';
-	return `${authEndpoint}?${clientID}&${redirectUri}&${state}`;
-};
-//2. bexio redirects the user to the authorization page
+//Authorization Code Grant
+const app = express()
 
-//3. Request an access token
-const getAccessToken = () => {
+app.get('/auth/bexio', function (req, res) {
+  const uri = bexioAuth.code.getUri()
+  res.redirect(uri)
+})
 
-};
-//5. Call any resource-->getData.js
+app.get('/auth/bexio/callback', function (req, res) {
+  githubAuth.code.getToken(req.originalUrl)
+    .then(function (user) {
+      console.log(user) //=> { accessToken: '...', tokenType: 'bearer', ... }
+
+      // Refresh the current users access token.
+      user.refresh().then(function (updatedUser) {
+        console.log(updatedUser !== user) //=> true
+        console.log(updatedUser.accessToken)
+      })
+
+      // Sign API requests on behalf of the current user.
+      user.sign({
+        method: 'get',
+        url: 'http://example.com'
+      })
+
+      // We should store the token into a database.
+      return res.send(user.accessToken)
+    })
+})
