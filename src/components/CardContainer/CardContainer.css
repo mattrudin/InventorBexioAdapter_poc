@@ -1,3 +1,4 @@
 .CardContainer {
-	border-top: 1px solid black;
+	display: flex;
+	margin: 10px;
 }

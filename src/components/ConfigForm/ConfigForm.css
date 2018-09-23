@@ -1,0 +1,33 @@
+.configform {
+    display: flex;
+    justify-content: center;
+    background: #0078d4;
+    color: white;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: start;
+}
+
+label {
+    margin: 10px;
+}
+
+input {
+    background: #0078d4;
+    color: white;
+    border: 0px;
+    border-bottom: 1px solid white;
+}
+
+.button {
+    display: block;
+    background: #0078d4;
+    color: white;
+    border: 1px solid white;
+    height: 40px;
+    margin: 10px 0px;
+}
