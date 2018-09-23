@@ -45,20 +45,25 @@ class ConfigForm extends React.Component{
 		const dropdownList = resources.map(item => <option value={item}>{item}</option>)
 
 		return(
-			<form onSubmit={this.handleSubmit}>
-				<label>
-		          Client ID:
-		          <input type="text" value={this.state.client_id} onChange={this.handleIdChange} />
-		        </label>
-		        <label>
-		          Client Secret:
-		          <input type="text" value={this.state.client_secret} onChange={this.handleSecretChange} />
-		        </label>
-       			<select value={this.state.resources} onChange={this.handleChange}>
-       				{dropdownList}
-          		</select>
-        		<input type="submit" value="Get data from Bexio" />
-      		</form>
+			<div className="configform">
+				<form onSubmit={this.handleSubmit}>
+					<label>
+						Client ID:
+						<input type="text" value={this.state.client_id} onChange={this.handleIdChange} />
+					</label>
+					<label>
+						Client Secret:
+						<input type="text" value={this.state.client_secret} onChange={this.handleSecretChange} />
+					</label>
+					<label>
+						Rescource:
+						<select value={this.state.resources} onChange={this.handleChange}>
+							{dropdownList}
+						</select>
+					</label>
+					<input className="button" type="submit" value="Get data from Bexio" />
+				</form>
+			</div>
 		);
 	}
 }
