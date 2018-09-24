@@ -18,7 +18,7 @@ class ConfigForm extends React.Component{
 	}
 
 	handleSubmit(event) {
-	    Bexio.getData(this.state.client_id, this.state.client_secret);
+	    Bexio.getData(this.state.client_id, this.state.client_secret, this.state.resources);
 	    event.preventDefault();
 	}
 

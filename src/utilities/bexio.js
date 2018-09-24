@@ -59,12 +59,12 @@ const Bexio = {
 		});
 	},
 
-	getData(clientID, clientSecret) {
+	getData(clientID, clientSecret, resources) {
 		console.log('getData is currently running', clientID, clientSecret);
 		let token = Bexio.getAccessToken(clientID, clientSecret);
 		const dataUrl = 'https://office.bexio.com/api2.php/';
 		const organisation = '%org%';
-		const resource = 'article';
+		const resource = resources;
 		const url = `${dataUrl}${organisation}/${resource}`;
 		return fetch(url, {
 			headers: {
