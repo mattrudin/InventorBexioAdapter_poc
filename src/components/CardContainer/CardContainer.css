@@ -1,4 +1,5 @@
 .CardContainer {
 	display: flex;
 	margin: 10px;
+	flex-wrap: wrap;
 }
