@@ -1,7 +1,8 @@
 import React from 'react';
 import './ConfigForm.css';
 import { resources } from './resources';
-import Bexio from '../../utilities/bexio';
+//import Bexio from '../../utilities/bexio';
+import BexioOAuth from '../../utilities/BexioOAuth';
 
 class ConfigForm extends React.Component{
 	constructor(props) {
@@ -18,7 +19,7 @@ class ConfigForm extends React.Component{
 	}
 
 	handleSubmit(event) {
-	    Bexio.getData(this.state.client_id, this.state.client_secret, this.state.resources);
+	    BexioOAuth.getData(this.state.client_id, this.state.client_secret, this.state.resources);
 	    event.preventDefault();
 	}
 

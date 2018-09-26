@@ -1,17 +1,17 @@
 const redirectURI = 'http://localhost:3000/';
 
 const BexioOAuth = {
-  getCode = (clientID) => {
+  getCode(clientID) {
     const authorizeUrl = 'https://office.bexio.com/oauth/authorize';
     const state = this.generateState(); //secure random number
-    location.href = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
+    window.location.href = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
     const code = window.location.href.match(/code=([^&]*)/);
     const stateReceived = window.location.href.match(/state=([^&]*)/);
     const isState = this.compareState(state, stateReceived);
     return isState ? code : alert('State is not the same. Function terminated');
   },
   
-  generateState = () => {
+  generateState(){
     const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const UintArray = new Uint8Array(40);
     window.crypto.getRandomValues(UintArray);
@@ -20,14 +20,14 @@ const BexioOAuth = {
     return randomState;
   },
 
-  compareState = (stateSend, stateReceived) => {
+  compareState(stateSend, stateReceived) {
     return stateSend === stateReceived ? true : false;
   },
   
-  getAccessToken = (clientID, clientSecret) => {
-    const code = getCode(clientID);
+  getAccessToken(clientID, clientSecret) {
+    const code = this.getCode(clientID);
     const accessTokenUrl = 'https://office.bexio.com/oauth/access_token';
-    const accessToken = '';
+    let accessToken = '';
     fetch(accessTokenUrl, {
       method: 'post',
       client_id: clientID,
@@ -38,5 +38,24 @@ const BexioOAuth = {
     }).then(jsonResponse => {accessToken = jsonResponse.access_token
     });
     return accessToken;
-  }
+  },
+
+  getData(clientID, clientSecret, resources) {
+		console.log('getData is currently running', clientID, clientSecret); //for debugging only
+		let token = this.getAccessToken(clientID, clientSecret);
+		const dataUrl = 'https://office.bexio.com/api2.php/';
+		const organisation = '%org%';
+		const resource = resources;
+		const url = `${dataUrl}${organisation}/${resource}`;
+		return fetch(url, {
+			headers: {
+				Accept: 'application/json',
+				Authorization: `Bearer ${token}`
+		}
+		}).then(response => {return response.json()
+		}).then(jsonResponse => {console.log(jsonResponse)
+		});
+	}
 }
+
+export default BexioOAuth;
