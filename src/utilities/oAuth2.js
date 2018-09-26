@@ -1,42 +1,42 @@
-import ClientOAuth2 from 'client-oauth2'; 
-import express from 'express';
+const redirectURI = 'http://localhost:3000/';
 
-//Configuration
-const bexioAuth = new ClientOAuth2({
-  clientId: 'abc',
-  clientSecret: '123',
-  accessTokenUri: 'https://office.bexio.com/oauth/access_token',
-  authorizationUri: 'https://office.bexio.com/oauth/authorize',
-  redirectUri: 'http://localhost:3000/', //oder requestb.in
-  state: 'abc123'
-})
+const BexioOAuth = {
+  getCode = (clientID) => {
+    const authorizeUrl = 'https://office.bexio.com/oauth/authorize';
+    const state = this.generateState(); //secure random number
+    location.href = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
+    const code = window.location.href.match(/code=([^&]*)/);
+    const stateReceived = window.location.href.match(/state=([^&]*)/);
+    const isState = this.compareState(state, stateReceived);
+    return isState ? code : alert('State is not the same. Function terminated');
+  },
+  
+  generateState = () => {
+    const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const UintArray = new Uint8Array(40);
+    window.crypto.getRandomValues(UintArray);
+    const array = UintArray.map(x => validChars.charCodeAt(x % validChars.length));
+    const randomState = String.fromCharCode.apply(null, array);
+    return randomState;
+  },
 
-//Authorization Code Grant
-const app = express()
-
-app.get('/auth/bexio', function (req, res) {
-  const uri = bexioAuth.code.getUri()
-  res.redirect(uri)
-})
-
-app.get('/auth/bexio/callback', function (req, res) {
-  githubAuth.code.getToken(req.originalUrl)
-    .then(function (user) {
-      console.log(user) //=> { accessToken: '...', tokenType: 'bearer', ... }
-
-      // Refresh the current users access token.
-      user.refresh().then(function (updatedUser) {
-        console.log(updatedUser !== user) //=> true
-        console.log(updatedUser.accessToken)
-      })
-
-      // Sign API requests on behalf of the current user.
-      user.sign({
-        method: 'get',
-        url: 'http://example.com'
-      })
-
-      // We should store the token into a database.
-      return res.send(user.accessToken)
-    })
-})
+  compareState = (stateSend, stateReceived) => {
+    return stateSend === stateReceived ? true : false;
+  },
+  
+  getAccessToken = (clientID, clientSecret) => {
+    const code = getCode(clientID);
+    const accessTokenUrl = 'https://office.bexio.com/oauth/access_token';
+    const accessToken = '';
+    fetch(accessTokenUrl, {
+      method: 'post',
+      client_id: clientID,
+      redirect_uri: redirectURI,
+      client_secret: clientSecret,
+      code: code
+    }).then(response => {return response.json()
+    }).then(jsonResponse => {accessToken = jsonResponse.access_token
+    });
+    return accessToken;
+  }
+}
