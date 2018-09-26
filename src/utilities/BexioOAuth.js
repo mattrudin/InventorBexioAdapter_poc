@@ -1,7 +1,27 @@
 const redirectURI = 'http://localhost:3000/';
+let state = '';
 
 const BexioOAuth = {
-  getCode(clientID) {
+
+  async makeCodeRequest(clientID) {
+    return this.getCode(await this.goToUrl(clientID));
+  },
+
+  goToUrl(clientID) {
+    const authorizeUrl = 'https://office.bexio.com/oauth/authorize';
+    state = this.generateState(); //secure random number
+    window.location.href = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
+  },
+
+  getCode() {
+    const code = window.location.href.match(/code=([^&]*)/);
+    /* const stateReceived = window.location.href.match(/state=([^&]*)/);
+    const isState = this.compareState(state, stateReceived);
+    return isState ? code : alert('State is not the same. Function terminated'); */
+    return code;
+  },
+
+  /* getCode(clientID) {
     const authorizeUrl = 'https://office.bexio.com/oauth/authorize';
     const state = this.generateState(); //secure random number
     window.location.href = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
@@ -9,7 +29,7 @@ const BexioOAuth = {
     const stateReceived = window.location.href.match(/state=([^&]*)/);
     const isState = this.compareState(state, stateReceived);
     return isState ? code : alert('State is not the same. Function terminated');
-  },
+  }, */
   
   generateState(){
     const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -20,12 +40,12 @@ const BexioOAuth = {
     return randomState;
   },
 
-  compareState(stateSend, stateReceived) {
+  /* compareState(stateSend, stateReceived) {
     return stateSend === stateReceived ? true : false;
-  },
+  }, */
   
   getAccessToken(clientID, clientSecret) {
-    const code = this.getCode(clientID);
+    const code = this.makeCodeRequest(clientID);
     const accessTokenUrl = 'https://office.bexio.com/oauth/access_token';
     let accessToken = '';
     fetch(accessTokenUrl, {
