@@ -3,33 +3,25 @@ let state = '';
 
 const BexioOAuth = {
 
-  async makeCodeRequest(clientID) {
-    return this.getCode(await this.goToUrl(clientID));
+  makeCodeRequest(clientID) {
+    this.goToUrl(clientID).then(this.getCode);
   },
 
   goToUrl(clientID) {
+    console.log('goToUrl is running');
     const authorizeUrl = 'https://office.bexio.com/oauth/authorize';
     state = this.generateState(); //secure random number
     window.location.href = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
   },
 
   getCode() {
+    console.log('getCode is running');
     const code = window.location.href.match(/code=([^&]*)/);
     /* const stateReceived = window.location.href.match(/state=([^&]*)/);
     const isState = this.compareState(state, stateReceived);
     return isState ? code : alert('State is not the same. Function terminated'); */
     return code;
   },
-
-  /* getCode(clientID) {
-    const authorizeUrl = 'https://office.bexio.com/oauth/authorize';
-    const state = this.generateState(); //secure random number
-    window.location.href = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`;
-    const code = window.location.href.match(/code=([^&]*)/);
-    const stateReceived = window.location.href.match(/state=([^&]*)/);
-    const isState = this.compareState(state, stateReceived);
-    return isState ? code : alert('State is not the same. Function terminated');
-  }, */
   
   generateState(){
     const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

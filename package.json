@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "client-oauth2": "^4.2.1",
+    "jso": "^4.1.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5"
