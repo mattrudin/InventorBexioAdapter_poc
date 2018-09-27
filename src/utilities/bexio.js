@@ -1,4 +1,4 @@
-import {JSO, Popup} from 'jso';
+import {JSO} from 'jso';
 
 const generateState = () => {
     const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -13,23 +13,21 @@ const state = generateState();
 
 let config = {
     providerID: "bexio",
-    client_id: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    redirect_uri: "http://localhost:3000/", // The URL where you is redirected back, and where you perform run the callback() function.
+    client_id: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    redirect_uri: "http://localhost:3000/",
     authorization: "https://office.bexio.com/oauth/authorize",
+    scopes: { request: ['article_show']},
     request: {state: state},
     response_type: 'code',
-	client_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-	token: "https://office.bexio.com/oauth/access_token"
+	client_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    token: "https://office.bexio.com/oauth/access_token",
+    debug: true
 };
 
 let client = new JSO(config);
 
 export const connectToBexio = () => {
-    console.log('authorize');
     client.callback();
-    console.log('callback initialized');
     let token = client.getToken()
-    if (token !== null) {
-        console.log("I got the token: ", token)
-    }
+    return token;
 };

@@ -2,7 +2,6 @@ import React from 'react';
 import './ConfigForm.css';
 import { resources } from './resources';
 import { connectToBexio } from '../../utilities/bexio';
-//import BexioOAuth from '../../utilities/BexioOAuth';
 
 class ConfigForm extends React.Component{
 	constructor(props) {
@@ -10,7 +9,9 @@ class ConfigForm extends React.Component{
 		this.state = {
 			client_id: '',
 			client_secret: '',
-			resources: 'article'
+			resources: 'article',
+			access_token: '',
+			tokenRecived: 'false'
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleIdChange = this.handleIdChange.bind(this);
@@ -18,9 +19,12 @@ class ConfigForm extends React.Component{
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleSubmit(event) {
-	    connectToBexio();
-	    event.preventDefault();
+	handleSubmit() {
+		let token = connectToBexio();
+		this.setState({
+			access_token: token,
+			tokenRecived: 'true'
+		});
 	}
 
 	handleIdChange(event) {
@@ -62,8 +66,11 @@ class ConfigForm extends React.Component{
 							{dropdownList}
 						</select>
 					</label>
-					<input className="button" type="submit" value="Get data from Bexio" />
+					<input className="button" type="submit" value="Get Token from Bexio" />
+					<p>Token:{this.state.access_token}</p>
+					<p>Token:{this.state.tokenRecived}</p>
 				</form>
+				<button onClick={this.handleSubmit} />
 			</div>
 		);
 	}
