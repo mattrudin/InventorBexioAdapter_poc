@@ -1,80 +1,35 @@
-//1. Request access to the bexio account
-//		requires
-//			clientID
-//			redirectURI
-//			state			
-//2. bexio redirects the user to the authorization page
-//		look for the acces token with:
-//		const code = window.location.href.match(/code=([^&]*)/)
-//3. Request an access token
-//		requires
-//			clientID
-//			redirectURI
-//			clientSecret
-//			code
-//4. Receive the access token
-//		receive a json object with "acces_token"
-//5. Call any resource
-//		see getData
+import {JSO, Popup} from 'jso';
 
-let accessToken = '';
-const authorizeUrl = 'https://office.bexio.com/oauth/authorize';
-const redirectURI = 'http://localhost:3000/';
-const state = '';
+const generateState = () => {
+    const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const UintArray = new Uint8Array(40);
+    window.crypto.getRandomValues(UintArray);
+    const array = UintArray.map(x => validChars.charCodeAt(x % validChars.length));
+    const randomState = String.fromCharCode.apply(null, array);
+    return randomState;
+  }
 
-const accessTokenUrl = 'https://office.bexio.com/oauth/access_token';
+const state = generateState();
 
-//const organisation = //company identifier
-const resource = resource;
+let config = {
+    providerID: "bexio",
+    client_id: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    redirect_uri: "http://localhost:3000/", // The URL where you is redirected back, and where you perform run the callback() function.
+    authorization: "https://office.bexio.com/oauth/authorize",
+    request: {state: state},
+    response_type: 'code',
+	client_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+	token: "https://office.bexio.com/oauth/access_token"
+};
 
-const dataUrl = 'https://office.bexio.com/api2.php/';
+let client = new JSO(config);
 
-
-
-const Bexio = {
-	getAccessToken(clientID, clientSecret) {
-		console.log('getAccessToken is currently running');
-		if (accessToken) {
-			return accessToken;
-		} 
-		//step 1 & 2: get Code
-		const code = window.location.href.match(/code=([^&]*)/);
-		const expiresIn = window.location.href.match(/expires_in=([^&]*)/);
-		if(code && expiresIn) {
-			window.setTimeout(() => accessToken = '', expiresIn * 1000);
-			window.history.pushState('Code', null, '/');
-			return code;
-		} else {
-			window.location = `${authorizeUrl}?client_id=${clientID}&redirect_uri=${redirectURI}&state=${state}`
-		}
-		//step 3 & 4: get AccessToken
-		return fetch(accessTokenUrl, {
-			method: 'post',
-			client_id: clientID,
-			redirect_uri: redirectURI,
-			client_secret: clientSecret,
-			code: code
-		}).then(response => {return response.json()
-		}).then(jsonResponse => {return accessToken = jsonResponse.access_token
-		});
-	},
-
-	getData(clientID, clientSecret, resources) {
-		console.log('getData is currently running', clientID, clientSecret);
-		let token = Bexio.getAccessToken(clientID, clientSecret);
-		const dataUrl = 'https://office.bexio.com/api2.php/';
-		const organisation = '%org%';
-		const resource = resources;
-		const url = `${dataUrl}${organisation}/${resource}`;
-		return fetch(url, {
-			headers: {
-				Accept: 'application/json',
-				Authorization: `Bearer ${token}`
-		}
-		}).then(response => {return response.json()
-		}).then(jsonResponse => {console.log(jsonResponse)
-		});
-	}
-}
-
-export default Bexio;
+export const connectToBexio = () => {
+    console.log('authorize');
+    client.callback();
+    console.log('callback initialized');
+    let token = client.getToken()
+    if (token !== null) {
+        console.log("I got the token: ", token)
+    }
+};
