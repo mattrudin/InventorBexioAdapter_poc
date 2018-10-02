@@ -9,7 +9,7 @@ form {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    text-align: start;
+    text-align: start; 
 }
 
 label {
@@ -30,4 +30,16 @@ input {
     border: 1px solid white;
     height: 40px;
     margin: 10px 0px;
+}
+
+.Token {
+    border-right: 1px solid white;
+    margin-right: 20px;
+    padding-right: 20px;
+}
+
+.GetRessource {
+    border-right: 1px solid white;
+    margin-right: 20px;
+    padding-right: 20px;
 }
