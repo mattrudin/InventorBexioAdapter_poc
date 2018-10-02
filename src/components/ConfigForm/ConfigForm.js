@@ -1,7 +1,7 @@
 import React from 'react';
 import './ConfigForm.css';
 import { resources } from './resources';
-import { connectToBexio } from '../../utilities/bexio';
+import { clearStorage, getCode, oauthLogin, getAccessToken, shortenCode, getArticles } from '../../utilities/oauth';
 
 class ConfigForm extends React.Component{
 	constructor(props) {
@@ -10,22 +10,18 @@ class ConfigForm extends React.Component{
 			client_id: '',
 			client_secret: '',
 			resources: 'article',
-			access_token: '',
-			tokenRecived: 'false'
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleIdChange = this.handleIdChange.bind(this);
 		this.handleSecretChange = this.handleSecretChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleSubmit() {
-		let token = connectToBexio();
-		this.setState({
-			access_token: token,
-			tokenRecived: 'true'
-		});
-	}
+	componentDidMount() {
+		this.timerID = setInterval(
+		  () => getCode(),
+		  1000
+		);
+	  }
 
 	handleIdChange(event) {
 		this.setState({
@@ -40,10 +36,19 @@ class ConfigForm extends React.Component{
 	}
 
 	handleChange(event) {
-    	this.setState({
-    		resources: event.target.value
-    	});
-  	}
+		this.setState({
+			resources: event.target.value
+		});
+	  }
+
+	handleSubmitToken() {
+		//TODO
+	}
+
+	handleSubmitRessource() {
+		//TODO
+	}
+
 
 	render() {
 
@@ -51,7 +56,14 @@ class ConfigForm extends React.Component{
 
 		return(
 			<div className="configform">
-				<form onSubmit={this.handleSubmit}>
+				<div className="App">
+					<button className="button" onClick={clearStorage}>Clear Storage</button>
+					<button className="button" onClick={oauthLogin}>Get Code</button>
+					<button className="button" onClick={shortenCode}>Shorten Code</button>
+					<button className="button" onClick={getAccessToken}>Get AccessToken</button>
+					<button className="button" onClick={getArticles}>Get Articles</button>
+				</div>
+				<form className="Token" onSubmit={this.handleSubmitToken}>
 					<label>
 						Client ID:
 						<input type="text" value={this.state.client_id} onChange={this.handleIdChange} />
@@ -60,17 +72,26 @@ class ConfigForm extends React.Component{
 						Client Secret:
 						<input type="text" value={this.state.client_secret} onChange={this.handleSecretChange} />
 					</label>
+					<input className="button" type="submit" value="Get AccesToken from Bexio" />
+				</form>
+				<form className="GetRessource">
 					<label>
 						Rescource:
 						<select value={this.state.resources} onChange={this.handleChange}>
 							{dropdownList}
 						</select>
 					</label>
-					<input className="button" type="submit" value="Get Token from Bexio" />
-					<p>Token:{this.state.access_token}</p>
-					<p>Token:{this.state.tokenRecived}</p>
+					<input className="button" type="submit" value="Get ressource from Bexio" />				
 				</form>
-				<button onClick={this.handleSubmit} />
+				<form className="PostRessource">
+					<label>
+						Rescource:
+						<select value={this.state.resources} onChange={this.handleChange}>
+							{dropdownList}
+						</select>
+					</label>
+					<input className="button" type="submit" value="Post ressource to Bexio" />				
+				</form>
 			</div>
 		);
 	}
