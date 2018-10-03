@@ -1,6 +1,7 @@
 import {JSO} from 'jso';
 let clientID = '';
 let clientSecret = '';
+export let data = [];
 
 export const getCode = () => {
     let accessCode = '';
@@ -20,8 +21,10 @@ export const getCode = () => {
 //3. oauthLogin
 //4. shortenCode
 //5. getAccessToken
-//6. getData, transfer the data to Card.js
-//7. postData with uploaded file from user
+//6. setState with new data
+
+//7. getData, transfer the data to Card.js
+//8. postData with uploaded file from user
 
 export const loginFunction = (clientIDinput, clientSecretinput) => {
     setLoginData(clientIDinput, clientSecretinput);
@@ -107,7 +110,8 @@ export const getArticles = () => {
     http.onreadystatechange = function() {
         if(http.readyState === 4 && http.status === 200) {
             let articles = JSON.parse(http.responseText);
-             console.log(articles);
+            data = [...articles]; 
+            console.log(articles);
         }
     }
 

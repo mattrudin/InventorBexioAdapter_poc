@@ -2,10 +2,10 @@ import React from 'react';
 import './CardOutput.css';
 
 const CardOutput = (props) => {
+	let keyValue = props.value.join(": ")
 	return(
 		<div className="CardOutput">
-			<p>{props.key}</p>
-			<p>{props.value}</p>   
+			<p>{keyValue}</p>   
 	    </div>
 	);
 };
