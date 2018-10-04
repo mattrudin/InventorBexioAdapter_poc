@@ -1,6 +1,6 @@
 import {JSO} from 'jso';
-let clientID = '';
-let clientSecret = '';
+let clientID = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+let clientSecret = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 export let data = [];
 
 export const getCode = () => {
@@ -116,4 +116,8 @@ export const getArticles = () => {
     }
 
     http.send();
+}
+
+export const sendData = () => {
+    return data;
 }

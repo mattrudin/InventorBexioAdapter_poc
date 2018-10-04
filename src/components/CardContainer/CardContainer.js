@@ -6,7 +6,7 @@ import Card from '../Card/Card';
 
 const CardContainer = (props) => {
 	let data = props.data;
-	const cards = data.map((card, index)=> <Card key={index} data={card}/>)
+	const cards = data.map((card, index)=> <Card key={index} data={card}/>);
 
 	return(
 		<div className="CardContainer">

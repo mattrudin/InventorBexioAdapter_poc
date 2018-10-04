@@ -16,12 +16,12 @@ class ConfigForm extends React.Component{
 		this.handleSecretChange = this.handleSecretChange.bind(this);
 	}
 
-	componentDidMount() {
+	/* componentDidMount() {
 		this.timerID = setInterval(
 		  () => getCode(),
 		  1000
 		);
-	  }
+	  } */
 
 	handleIdChange(event) {
 		this.setState({
@@ -56,24 +56,6 @@ class ConfigForm extends React.Component{
 
 		return(
 			<div className="configform">
-				<div className="App">
-					<button className="button" onClick={clearStorage}>Clear Storage</button>
-					<button className="button" onClick={oauthLogin}>Get Code</button>
-					<button className="button" onClick={shortenCode}>Shorten Code</button>
-					<button className="button" onClick={getAccessToken}>Get AccessToken</button>
-					<button className="button" onClick={getArticles}>Get Articles</button>
-				</div>
-				<form className="Token" onSubmit={this.handleSubmitToken}>
-					<label>
-						Client ID:
-						<input type="text" value={this.state.client_id} onChange={this.handleIdChange} />
-					</label>
-					<label>
-						Client Secret:
-						<input type="text" value={this.state.client_secret} onChange={this.handleSecretChange} />
-					</label>
-					<input className="button" type="submit" value="Get AccesToken from Bexio" />
-				</form>
 				<form className="GetRessource">
 					<label>
 						Rescource:
