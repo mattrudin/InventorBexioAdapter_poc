@@ -26,12 +26,14 @@ export const getCode = () => {
 //7. getData, transfer the data to Card.js
 //8. postData with uploaded file from user
 
-export const loginFunction = (clientIDinput, clientSecretinput) => {
+export async function loginFunction(clientIDinput, clientSecretinput) {
     setLoginData(clientIDinput, clientSecretinput);
     clearStorage();
-    oauthLogin();
+    await oauthLogin();
+    getCode();
     shortenCode();
-    getAccessToken();
+    await getAccessToken();
+    alert('Async function complete');
 }
 
 

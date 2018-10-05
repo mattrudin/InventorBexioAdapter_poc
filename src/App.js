@@ -11,13 +11,14 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clientID: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      clientSecret: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      clientID: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      clientSecret: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
       dataArray: [],
       gotData: false
     };
     this.oauthLogin = this.oauthLogin.bind(this);
     this.getArticles = this.getArticles.bind(this);
+    this.getTimesheet = this.getTimesheet.bind(this);
   }
 
   componentDidMount() {
@@ -48,7 +49,7 @@ class App extends Component {
         client_id: this.state.clientID,
         redirect_uri: "http://localhost:3000/",
         authorization: "https://office.bexio.com/oauth/authorize/",
-        scopes: { request: ["article_show"]},
+        scopes: { request: ["article_show", "monitoring_show"]},
         response_type: 'code',
         client_secret: this.state.clientSecret,
         token: "https://office.bexio.com/oauth/access_token/",
@@ -114,12 +115,28 @@ class App extends Component {
       }
         
     http.send();
-    setTimeout(
-      this.setState({
-        dataArray: [...data],
-        gotData: true
-      }), 2000
-    )
+  }
+
+  getTimesheet = () => {
+    let data = [];
+    const http = new XMLHttpRequest();
+    const baseUrl = 'https://office.bexio.com/api2.php/'
+    const organisation = localStorage.getItem('org');
+    const accessToken = localStorage.getItem('access_token')
+    const url = `${baseUrl}${organisation}/timesheet`;
+    http.open( "GET", url, true );
+    http.setRequestHeader("Accept",'application/json');
+    http.setRequestHeader("Authorization",`Bearer ${accessToken}`);
+
+    http.onreadystatechange = function() {
+      if(http.readyState === 4 && http.status === 200) {
+          let articles = JSON.parse(http.responseText);
+          data = [...articles]; 
+          console.log(articles);
+        }
+      }
+        
+    http.send();
   }
 
 
@@ -134,6 +151,7 @@ class App extends Component {
         <button className="button" onClick={this.shortenCode}>Shorten Code</button>
         <button className="button" onClick={this.getAccessToken}>Get AccessToken</button>
         <button className="button" onClick={this.getArticles}>Get Articles</button>
+        <button className="button" onClick={this.getTimesheet}>Get Timesheets</button>
         <p>{this.state.gotData ? this.state.dataArray.join(': ') : 'No Data'}</p>
       </div>
     );
